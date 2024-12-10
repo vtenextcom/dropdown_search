@@ -56,6 +56,10 @@ class MenuProps {
   final Color? surfaceTintColor;
   final EdgeInsets? margin;
   final RouteTransitionsBuilder? transitionBuilder;
+  final SingleChildLayoutDelegate Function(
+      BuildContext context,
+      RelativeRect position,
+      )? layoutDelegate;
 
   const MenuProps({
     this.align,
@@ -78,6 +82,7 @@ class MenuProps {
     this.surfaceTintColor,
     this.margin,
     this.transitionBuilder,
+    this.layoutDelegate,
   });
 }
 
@@ -101,6 +106,10 @@ class CupertinoMenuProps {
   final Color? surfaceTintColor;
   final EdgeInsets? margin;
   final RouteTransitionsBuilder? transitionBuilder;
+  final SingleChildLayoutDelegate Function(
+      BuildContext context,
+      RelativeRect position,
+      )? layoutDelegate;
 
   const CupertinoMenuProps({
     this.align,
@@ -123,6 +132,7 @@ class CupertinoMenuProps {
     this.surfaceTintColor,
     this.margin = const EdgeInsets.only(top: 8),
     this.transitionBuilder,
+    this.layoutDelegate,
   });
 }
 

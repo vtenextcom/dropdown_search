@@ -85,6 +85,7 @@
   * add `onDisplayed` callback to `popupProps`
   * add `errorBuilder` for `InfiniteScrollProps`
   * add possibility to reload item using `myGlobalKey.currentState?.reloadItems(String filter)` or `myGlobalKey.currentState?.loadMoreItems(String filter, int skip)`
+  * add `textProps` to have an ability to pass default text props through the context to `selectedItem` 
 
 * #### Breaking changes
   * change `onChanged` to `onSelected`

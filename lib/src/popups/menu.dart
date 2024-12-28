@@ -147,7 +147,11 @@ class _MaterialPopupMenuRoute<T> extends PopupRoute<T> {
       );
 
       return CustomSingleChildLayout(
-        delegate: _PopupMenuRouteLayout(context, position),
+        delegate: menuProps.layoutDelegate?.call(
+          context,
+          position,
+        ) ??
+            _PopupMenuRouteLayout(context, position),
         child: InheritedTheme.capture(
                 from: context, to: Navigator.of(context).context)
             .wrap(menu),
@@ -226,7 +230,11 @@ class _CupertinoPopupMenuRoute<T> extends PopupRoute<T> {
         menuProps.margin,
       );
       return CustomSingleChildLayout(
-        delegate: _PopupMenuRouteLayout(context, position),
+        delegate: menuProps.layoutDelegate?.call(
+          context,
+          position,
+        ) ??
+            _PopupMenuRouteLayout(context, position),
         child: InheritedTheme.capture(
                 from: parentContext, to: Navigator.of(context).context)
             .wrap(menu),

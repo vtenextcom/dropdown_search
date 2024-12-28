@@ -57,6 +57,17 @@ class MenuProps {
   final EdgeInsets? margin;
   final RouteTransitionsBuilder? transitionBuilder;
 
+  /// This property is exposed in order to give low level access to the
+  /// positioning algorithm of the menu popup
+  /// The delegate can determine the layout constraints for the child and can
+  /// decide where to position the child.
+  /// extend [`SingleChildLayoutDelegate`](https://api.flutter.dev/flutter/rendering/SingleChildLayoutDelegate-class.html)
+  //  to create your own positioning strategy
+  final SingleChildLayoutDelegate Function(
+    BuildContext context,
+    RelativeRect position,
+  )? layoutDelegate;
+
   const MenuProps({
     this.align,
     this.barrierLabel,
@@ -78,6 +89,7 @@ class MenuProps {
     this.surfaceTintColor,
     this.margin,
     this.transitionBuilder,
+    this.layoutDelegate,
   });
 }
 
@@ -102,6 +114,17 @@ class CupertinoMenuProps {
   final EdgeInsets? margin;
   final RouteTransitionsBuilder? transitionBuilder;
 
+  /// This property is exposed in order to give low level access to the
+  /// positioning algorithm of the menu popup
+  /// The delegate can determine the layout constraints for the child and can
+  /// decide where to position the child.
+  /// extend [`SingleChildLayoutDelegate`](https://api.flutter.dev/flutter/rendering/SingleChildLayoutDelegate-class.html)
+  //  to create your own positioning strategy
+  final SingleChildLayoutDelegate Function(
+    BuildContext context,
+    RelativeRect position,
+  )? layoutDelegate;
+
   const CupertinoMenuProps({
     this.align,
     this.barrierLabel,
@@ -123,6 +146,7 @@ class CupertinoMenuProps {
     this.surfaceTintColor,
     this.margin = const EdgeInsets.only(top: 8),
     this.transitionBuilder,
+    this.layoutDelegate,
   });
 }
 

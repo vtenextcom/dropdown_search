@@ -44,6 +44,39 @@
         },
       )
     ```
+  * add new property `layoutDelegate` to `MenuProps` and `CupertinoMenuProps`, you can extend
+    [`SingleChildLayoutDelegate`](https://api.flutter.dev/flutter/rendering/SingleChildLayoutDelegate-class.html)
+    to create your own positioning strategy
+     
+    example of use
+    ```dart
+      layoutDelegate: (context, padding, position) => _PopupMenuRouteLayout(context, position)
+    
+      class _PopupMenuRouteLayout extends SingleChildLayoutDelegate {
+        final RelativeRect position;
+        final BuildContext context;
+    
+        const _PopupMenuRouteLayout(this.context, this.position);
+    
+      @override
+      BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+        // pick any properties from the context to calculate proper constraints
+        final mediaQuery = MediaQuery.of(context);
+        final keyBoardHeight = mediaQuery.viewInsets.bottom;
+        final safeArea = mediaQuery.padding;
+    
+        return BoxConstraints(/* calculate new constraints based on your needs */);
+      }
+    
+        @override
+        Offset getPositionForChild(Size size, Size childSize) {
+          // The position where the child should be placed.
+        }
+    
+        @override
+        bool shouldRelayout(covariant SingleChildLayoutDelegate oldDelegate) => false;
+      }
+    ``` 
   * add `SuggestionsProps` to `popupProps`
   * add `builder` property for `SuggestionsProps` to override the hole suggestion widget
   * add properties to `scrollView` and `wrap` widget for selected items in multiSelection mode

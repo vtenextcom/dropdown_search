@@ -10,6 +10,7 @@ import 'package:dropdown_search/src/widgets/custom_chip.dart';
 import 'package:dropdown_search/src/widgets/custom_icon_button.dart';
 import 'package:dropdown_search/src/widgets/custom_inkwell.dart';
 import 'package:dropdown_search/src/widgets/custom_wrap.dart';
+import 'package:dropdown_search/src/widgets/props/text_props.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -143,6 +144,9 @@ abstract class BaseDropdownSearch<T> extends StatefulWidget {
   ///dropdown decoration props
   final DropDownDecoratorProps decoratorProps;
 
+  /// default text props that are going to be passed through the context to `selectedItem`
+  final TextProps textProps;
+
   ///a callBack will be called before opening le popup
   ///if the callBack return FALSE, the opening of the popup will be cancelled
   final BeforePopupOpening<T>? onBeforePopupOpening;
@@ -181,6 +185,7 @@ abstract class BaseDropdownSearch<T> extends StatefulWidget {
     this.validator,
     this.chipProps,
     DropDownDecoratorProps? decoratorProps,
+    this.textProps = const TextProps(),
   })  : assert(
           T == String || T == int || T == double || compareFn != null,
           '`compareFn` is required',
@@ -242,6 +247,7 @@ abstract class BaseDropdownSearch<T> extends StatefulWidget {
     FormFieldValidator<List<T>>? validator,
     DropDownDecoratorProps? decoratorProps,
     this.chipProps,
+    this.textProps = const TextProps(),
   })  : assert(
           T == String || T == int || T == double || compareFn != null,
           '`compareFn` is required',
@@ -414,7 +420,7 @@ class DropdownSearchState<T> extends State<BaseDropdownSearch<T>> {
             builder: (context, isFocused, w) {
               final selectedItems = _buildSelectedItemsWidget();
               return InputDecorator(
-                baseStyle: _getBaseTextStyle(),
+                baseStyle: _getDecoratorBaseTextStyle(),
                 textAlign: widget.decoratorProps.textAlign,
                 textAlignVertical: widget.decoratorProps.textAlignVertical,
                 isEmpty: getSelectedItem == null,
@@ -486,27 +492,47 @@ class DropdownSearchState<T> extends State<BaseDropdownSearch<T>> {
       if (item == null) return null;
       return Text(
         _itemAsString(item),
-        style: _getBaseTextStyle(),
-        textAlign: widget.decoratorProps.textAlign,
       );
     }
 
+    Widget? selectedItem = defaultSelectedItemWidget(getSelectedItem);
+
     if (widget.dropdownBuilder != null) {
-      return widget.dropdownBuilder!(context, getSelectedItem);
+      selectedItem = widget.dropdownBuilder!(context, getSelectedItem);
     } else if (widget.dropdownBuilderMultiSelection != null) {
-      return widget.dropdownBuilderMultiSelection!(context, getSelectedItems);
+      selectedItem =
+          widget.dropdownBuilderMultiSelection!(context, getSelectedItems);
     } else if (isMultiSelectionMode) {
-      return defaultSelectedItems(getSelectedItems);
+      selectedItem = defaultSelectedItems(getSelectedItems);
     }
 
-    return defaultSelectedItemWidget(getSelectedItem);
+    if (selectedItem != null) {
+      return DefaultTextStyle.merge(
+        style: _getTextStyle(),
+        child: selectedItem,
+        textAlign: widget.textProps.textAlign,
+        softWrap: widget.textProps.softWrap,
+        overflow: widget.textProps.overflow,
+        maxLines: widget.textProps.maxLines,
+        textWidthBasis: widget.textProps.textWidthBasis,
+      );
+    }
+
+    return null;
   }
 
-  TextStyle? _getBaseTextStyle() {
+  TextStyle? _getDecoratorBaseTextStyle() {
     return widget.enabled
         ? widget.decoratorProps.baseStyle
         : TextStyle(color: Theme.of(context).disabledColor)
             .merge(widget.decoratorProps.baseStyle);
+  }
+
+  TextStyle? _getTextStyle() {
+    return widget.enabled
+        ? widget.textProps.style
+        : TextStyle(color: Theme.of(context).disabledColor)
+            .merge(widget.textProps.style);
   }
 
   Widget _formField() {
@@ -536,7 +562,7 @@ class DropdownSearchState<T> extends State<BaseDropdownSearch<T>> {
             valueListenable: _isFocused,
             builder: (context, isFocused, w) {
               return InputDecorator(
-                baseStyle: _getBaseTextStyle(),
+                baseStyle: _getDecoratorBaseTextStyle(),
                 textAlign: widget.decoratorProps.textAlign,
                 textAlignVertical: widget.decoratorProps.textAlignVertical,
                 isEmpty: getSelectedItem == null,
@@ -570,7 +596,7 @@ class DropdownSearchState<T> extends State<BaseDropdownSearch<T>> {
           valueListenable: _isFocused,
           builder: (context, isFocused, w) {
             return InputDecorator(
-              baseStyle: _getBaseTextStyle(),
+              baseStyle: _getDecoratorBaseTextStyle(),
               textAlign: widget.decoratorProps.textAlign,
               textAlignVertical: widget.decoratorProps.textAlignVertical,
               isEmpty: getSelectedItems.isEmpty,

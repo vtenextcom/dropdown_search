@@ -302,6 +302,8 @@ class DropdownSearchState<T> extends State<BaseDropdownSearch<T>> {
   CustomOverlayEntry? _customOverlyEntry;
   final autoCompleteFocusNode = FocusNode();
 
+  FocusNode? get dropdownFocusNode => widget.clickProps.focusNode;
+
   @override
   void initState() {
     super.initState();
@@ -905,7 +907,7 @@ class DropdownSearchState<T> extends State<BaseDropdownSearch<T>> {
   ///same thing for clear focus,
   void _handleFocus(bool isFocused) {
     if (isFocused && !_isFocused.value) {
-      FocusScope.of(context).unfocus();
+	  dropdownFocusNode?.requestFocus();
       _isFocused.value = true;
     } else if (!isFocused && _isFocused.value) {
       _isFocused.value = false;
